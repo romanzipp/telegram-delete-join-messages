@@ -38,4 +38,4 @@ jobs:
           KO_DOCKER_REPO: ghcr.io/${{ github.repository_owner }}
           BUILD_VERSION: ${{ steps.set_var.outputs.version }}
         run: |
-          ko build . --base-import-paths --sbom=none --tags="$BUILD_VERSION,latest"
+          ko build . --base-import-paths --sbom=none --platform=linux/amd64,linux/arm64 --tags="$BUILD_VERSION,latest"
