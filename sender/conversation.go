@@ -16,7 +16,7 @@ import (
 )
 
 const (
-	UserBadAnswer = "❌ Вы дали неправильный ответ.\nЕсли вы не знаете ответа, то вам сюда не надо."
+	UserBadAnswer = "❌ You gave the wrong answer.\nIf you don't know the answer, you don't belong here."
 )
 
 // ConversationHandler is a structure that manages conversation functions.
@@ -132,7 +132,7 @@ func (s *Sender) startConversation(ctx context.Context, b *bot.Bot, update *mode
 	if vote != 0 {
 		_, errSendMessage := b.SendMessage(ctx, &bot.SendMessageParams{
 			ChatID: update.Message.Chat.ID,
-			Text:   "✅ Вас уже записали",
+			Text:   "✅ You are already registered",
 		})
 
 		if errSendMessage != nil {
@@ -255,7 +255,7 @@ func (s *Sender) lastStep(ctx context.Context, b *bot.Bot, update *models.Update
 	}
 
 	if s.config.InviteLink != "" {
-		answer = answer + "\n🤫 Теперь перейдите по ссылке: " + s.config.InviteLink
+		answer = answer + "\n🤫 Now follow the link: " + s.config.InviteLink
 	}
 
 	_, errSendMessage := b.SendMessage(ctx, &bot.SendMessageParams{
@@ -277,7 +277,7 @@ func (s *Sender) GetVoteFromDBForUser(ctx context.Context, b *bot.Bot, chatID, u
 
 		_, errSendMessage := b.SendMessage(ctx, &bot.SendMessageParams{
 			ChatID: chatID,
-			Text:   "❌ Произошла ошибка при проверке ответа. Попробуйте еще раз",
+			Text:   "❌ An error occurred while checking the answer. Please try again",
 		})
 
 		if errSendMessage != nil {
@@ -290,7 +290,7 @@ func (s *Sender) GetVoteFromDBForUser(ctx context.Context, b *bot.Bot, chatID, u
 	if vote != 0 {
 		_, errSendMessage := b.SendMessage(ctx, &bot.SendMessageParams{
 			ChatID: chatID,
-			Text:   "✅ Вас уже записали",
+			Text:   "✅ You are already registered",
 		})
 
 		if errSendMessage != nil {
@@ -319,7 +319,7 @@ func (s *Sender) cancelConversation(ctx context.Context, b *bot.Bot, update *mod
 	// Send a message to indicate the conversation has been cancelled
 	_, errSendMessage := b.SendMessage(ctx, &bot.SendMessageParams{
 		ChatID: update.Message.Chat.ID,
-		Text:   "🥺 Дело ваше, может быть в следующий раз",
+		Text:   "🥺 It's up to you, maybe next time",
 	})
 
 	if errSendMessage != nil {

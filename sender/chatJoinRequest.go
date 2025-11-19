@@ -50,7 +50,7 @@ func (s *Sender) HandleChatJoinRequest(ctx context.Context, b *bot.Bot, update *
 		ctx,
 		&bot.SendMessageParams{
 			ChatID: fromID,
-			Text:   "❓ Для входа в группу ответьте на пару вопросов.\n\n🏬 В какой башне вы живете?",
+			Text:   "❓ To join the group, please answer a couple of questions.\n\n🏬 Which tower do you live in?",
 		},
 	)
 

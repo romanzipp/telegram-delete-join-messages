@@ -34,7 +34,7 @@ func (c *Commands) TLDR(ctx context.Context, b *bot.Bot, update *models.Update) 
 	if link == "" {
 		_, errSendMessage := b.SendMessage(ctx, &bot.SendMessageParams{
 			ChatID:    update.Message.Chat.ID,
-			Text:      "Бот заберёт статью по ссылке и сделает её краткое описание.",
+			Text:      "The bot will fetch the article from the link and create a brief summary.",
 			ParseMode: models.ParseModeHTML,
 		})
 
