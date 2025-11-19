@@ -5,7 +5,7 @@
 ```yaml
 services:
   telegram-bot:
-    image: ghcr.io/ad/tg-del-bot:latest
+    image: ghcr.io/romanzipp/telegram-delete-join-messages:latest
     container_name: telegram-delete-join-messages
     restart: unless-stopped
     volumes:

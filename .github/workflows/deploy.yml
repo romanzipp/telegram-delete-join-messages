@@ -32,14 +32,10 @@ jobs:
           content=`cat ./config.json`
           version=`echo $(jq -r '.version' <<< "$content")`
           echo "version=${version}" >> $GITHUB_OUTPUT
-          repo_name=`basename ${{ github.repository }}`
-          echo "repo_name=${repo_name}" >> $GITHUB_OUTPUT
-          GHCR_IMAGE="ghcr.io/${{ github.repository_owner }}/${repo_name}"
-          echo "ghcr_image=${GHCR_IMAGE}" >> $GITHUB_OUTPUT
 
       - name: Deploy to GitHub Container Registry
         env:
-          KO_DOCKER_REPO: ${{ steps.set_var.outputs.ghcr_image }}
+          KO_DOCKER_REPO: ghcr.io/${{ github.repository_owner }}
           BUILD_VERSION: ${{ steps.set_var.outputs.version }}
         run: |
           ko build . --base-import-paths --sbom=none --tags="$BUILD_VERSION,latest"
