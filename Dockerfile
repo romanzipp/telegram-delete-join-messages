@@ -12,7 +12,7 @@ ARG TARGETARCH
 ARG VERSION
 
 RUN CGO_ENABLED=0 GOOS=${TARGETOS} GOARCH=${TARGETARCH} \
-    go build -ldflags="-w -s -X main.version=${VERSION}" -o app .
+    go build -ldflags="-w -s -X main.version=${VERSION}" -o telegram-bot .
 
 FROM alpine:latest
 
@@ -20,6 +20,6 @@ RUN apk --no-cache add ca-certificates
 
 WORKDIR /app
 
-COPY --from=builder /build/app /app/app
+COPY --from=builder /build/telegram-bot .
 
-ENTRYPOINT ["/app/app"]
+ENTRYPOINT ["/app/telegram-bot"]
