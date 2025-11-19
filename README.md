@@ -24,3 +24,25 @@ services:
       DB_PATH: "/data/bot.db"
       DEBUG: "false"
 ```
+
+## Docker CLI
+
+```bash
+docker run -d \
+  --name telegram-delete-join-messages \
+  --restart unless-stopped \
+  -v ./data:/data \
+  -e TELEGRAM_TOKEN="your_bot_token_here" \
+  -e TELEGRAM_ADMIN_IDS="123456789,987654321" \
+  -e DELETE_JOIN="true" \
+  -e DELETE_LEAVE="true" \
+  -e RESTRICT_ON_JOIN="false" \
+  -e RESTRICT_ON_JOIN_TIME="600" \
+  -e ALLOWED_CHAT_IDS="" \
+  -e INVITE_LINK="" \
+  -e YANDEX_TOKEN="" \
+  -e CONVERSATIONS='[]' \
+  -e DB_PATH="/data/bot.db" \
+  -e DEBUG="false" \
+  ghcr.io/romanzipp/telegram-delete-join-messages:latest
+```
