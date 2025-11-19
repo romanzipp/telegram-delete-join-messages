@@ -1,57 +1,25 @@
-FROM golang:alpine AS builder
+FROM golang:1.24-alpine AS builder
 
-RUN apk update && apk add --no-cache ca-certificates && update-ca-certificates
+WORKDIR /build
 
-ARG BUILD_VERSION
+COPY go.mod go.sum ./
+RUN go mod download
 
-WORKDIR $GOPATH/src/app
-COPY translations translations
-COPY go.mod go.mod
-COPY go.sum go.sum
-COPY vendor vendor
-COPY app app
-COPY data data
-COPY commands commands
-COPY config config
-COPY logger logger
-COPY sender sender
-COPY main.go main.go
-COPY config.json /config.json
-RUN go version
-RUN CGO_ENABLED=0 go build -mod vendor -ldflags="-w -s -X main.version=${BUILD_VERSION}" -o /go/bin/app .
+COPY . .
 
-FROM scratch
-WORKDIR /app/
-COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
-COPY --from=builder /etc/passwd /etc/passwd
-COPY --from=builder /etc/group /etc/group
-COPY config.json /config.json
-COPY --from=builder /go/bin/app /go/bin/app
-ENTRYPOINT ["/go/bin/app"]
+ARG TARGETOS
+ARG TARGETARCH
+ARG VERSION
 
-#
-# LABEL target docker image
-#
+RUN CGO_ENABLED=0 GOOS=${TARGETOS} GOARCH=${TARGETARCH} \
+    go build -ldflags="-w -s -X main.version=${VERSION}" -o app .
 
-# Build arguments
-ARG BUILD_ARCH
-ARG BUILD_DATE
-ARG BUILD_REF
-ARG BUILD_VERSION
+FROM alpine:latest
 
-# Labels
-LABEL \
-    io.hass.name="telegram-delete-join-messages" \
-    io.hass.description="telegram-delete-join-messages" \
-    io.hass.arch="${BUILD_ARCH}" \
-    io.hass.version="${BUILD_VERSION}" \
-    io.hass.type="addon" \
-    maintainer="ad <github@apatin.ru>" \
-    org.label-schema.description="telegram-delete-join-messages" \
-    org.label-schema.build-date=${BUILD_DATE} \
-    org.label-schema.name="telegram-delete-join-messages" \
-    org.label-schema.schema-version="1.0" \
-    org.label-schema.usage="https://gitlab.com/ad/telegram-delete-join-messages/-/blob/master/README.md" \
-    org.label-schema.vcs-ref=${BUILD_REF} \
-    org.label-schema.vcs-url="https://github.com/ad/telegram-delete-join-messages/" \
-    org.label-schema.vendor="HomeAssistant add-ons by ad"
+RUN apk --no-cache add ca-certificates
+
+WORKDIR /app
+
+COPY --from=builder /build/app /app/app
+
+ENTRYPOINT ["/app/app"]
